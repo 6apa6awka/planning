@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="black">#000000</color>
+
+    <array name="projectColorArray">
+        <item>#D50000</item>
+        <item>#FF6D00</item>
+        <item>#FFD600</item>
+        <item>#00C853</item>
+        <item>#81D4FA</item>
+        <item>#6200EA</item>
+        <item>#9C27B0</item>
+    </array>
+</resources>
