@@ -5,13 +5,22 @@
     <color name="colorAccent">#D81B60</color>
     <color name="black">#000000</color>
 
+    <!-- Project label colors-->
+    <color name="red">#D50000</color>
+    <color name="orange">#FF6D00</color>
+    <color name="yellow">#FFD600</color>
+    <color name="green">#00C853</color>
+    <color name="blue">#81D4FA</color>
+    <color name="navy">#6200EA</color>
+    <color name="violet">#9C27B0</color>
+
     <array name="projectColorArray">
-        <item>#D50000</item>
-        <item>#FF6D00</item>
-        <item>#FFD600</item>
-        <item>#00C853</item>
-        <item>#81D4FA</item>
-        <item>#6200EA</item>
-        <item>#9C27B0</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/navy</item>
+        <item>@color/violet</item>
     </array>
 </resources>

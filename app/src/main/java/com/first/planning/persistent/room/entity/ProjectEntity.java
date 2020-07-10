@@ -11,6 +11,7 @@ public class ProjectEntity{
 
     private String title;
     private int order;
+    private int color;
 
     public int getId() {
         return id;
@@ -36,5 +37,11 @@ public class ProjectEntity{
         this.title = title;
     }
 
+    public int getColor() {
+        return color;
+    }
 
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

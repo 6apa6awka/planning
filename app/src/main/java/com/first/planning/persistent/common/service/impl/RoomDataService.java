@@ -16,6 +16,7 @@ public class RoomDataService {
         RoomDatabase db = Room.databaseBuilder(context,
                 RoomDatabase.class, "planning-db")
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration() //ToDo change to support migrations
                 .build();
 
         taskService = new TaskService(db.taskDao());
