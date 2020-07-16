@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ProjectEditableFragment extends DialogFragment {
 
@@ -33,18 +34,20 @@ public class ProjectEditableFragment extends DialogFragment {
     private Context context;
     private ProjectEntity currentProject;
     private ActionBar actionBar;
+    private Consumer<ProjectEntity> callback;
 
     int[] colors;
 
     public static final String COLOR = "color";
 
-    public ProjectEditableFragment(Menu projectMenu, ProjectService projectService, List<ProjectEntity> projects, Context context, ProjectEntity currentProject, ActionBar actionBar) {
+    public ProjectEditableFragment(Menu projectMenu, ProjectService projectService, List<ProjectEntity> projects, Context context, ProjectEntity currentProject, ActionBar actionBar, Consumer<ProjectEntity> callback) {
         this.projectMenu = projectMenu;
         this.projectService = projectService;
         this.context = context;
         this.projects = projects;
         this.currentProject = currentProject;
         this.actionBar = actionBar;
+        this.callback = callback;
 
         colors = context.getResources().getIntArray(R.array.projectColorArray);
     }
@@ -78,6 +81,8 @@ public class ProjectEditableFragment extends DialogFragment {
                 projects.add(project);
                 projectMenu.add(R.id.categories, project.getId(), projectMenu.size(), project.getTitle());
                 item = projectMenu.findItem(project.getId());
+                currentProject = project;
+                callback.accept(currentProject);
             } else {
                 updateAndSave(currentProject, color, titleEditText.getText().toString());
                 item = projectMenu.findItem(currentProject.getId());

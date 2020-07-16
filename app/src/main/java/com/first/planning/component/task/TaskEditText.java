@@ -20,8 +20,8 @@ public class TaskEditText extends AppCompatEditText {
 
     public TaskEditText(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setOnClickListener(v -> {
-            ((EditText) v).setInputType(InputType.TYPE_CLASS_TEXT);
+        /*setOnClickListener(v -> {
+            //((EditText) v).setInputType(InputType.TYPE_CLASS_TEXT);
         });
         setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
@@ -33,17 +33,17 @@ public class TaskEditText extends AppCompatEditText {
                 saveText();
             }
             return false;
-        });
+        });*/
     }
 
-    @Override
+   /* @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK &&
                 event.getAction() == KeyEvent.ACTION_UP) {
             saveText();
         }
         return super.onKeyPreIme(keyCode, event);
-    }
+    }*/
 
     private void saveText(){
         setInputType(InputType.TYPE_NULL);

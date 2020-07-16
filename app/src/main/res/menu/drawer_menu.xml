@@ -5,7 +5,7 @@
     <group android:id="@+id/inbox">
         <item
             android:id="@+id/inbox_item"
-            android:icon="@drawable/baseline_mail_black_18dp"
+            android:icon="@drawable/ic_mail_outline_black_24dp"
             android:iconTint="@android:color/black"
             android:title="@string/inbox" />
     </group>

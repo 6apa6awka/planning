@@ -1,6 +1,8 @@
 package com.first.planning;
 
 import android.content.res.ColorStateList;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -10,8 +12,8 @@ import com.first.planning.component.project.ProjectEditableFragment;
 import com.first.planning.component.task.NewTaskDialogFragment;
 import com.first.planning.component.task.TaskListAdapter;
 import com.first.planning.component.task.TaskListTouchHelperCallback;
+import com.first.planning.databinding.MainLayoutBinding;
 import com.first.planning.persistent.common.service.DataServiceResolver;
-import com.first.planning.databinding.MainActivityLayoutBinding;
 import com.first.planning.persistent.common.service.impl.RoomDataService;
 import com.first.planning.persistent.room.entity.ProjectEntity;
 import com.first.planning.persistent.room.service.ProjectService;
@@ -44,22 +46,22 @@ public class MainActivity extends AppCompatActivity {
     private ProjectService projectService;
 
     //Components
-    private MainActivityLayoutBinding mainActivityLayout;
+    private MainLayoutBinding mainLayout;
     private NavigationView projectNavigationView;
     private RecyclerView taskRecyclerView;
+    private Toolbar toolbar;
 
-    //Other
+    //Entities
     private List<ProjectEntity> projects;
     private ProjectEntity inboxProject;
     private ProjectEntity currentProject;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivityLayout = MainActivityLayoutBinding.inflate(getLayoutInflater());
-        projectNavigationView = mainActivityLayout.mainNavigationView;
-        setContentView(mainActivityLayout.getRoot());
+        mainLayout = MainLayoutBinding.inflate(getLayoutInflater());
+        projectNavigationView = mainLayout.mainNavigationView;
+        setContentView(mainLayout.getRoot());
 
         //initialization
         initData();
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            mainActivityLayout.mainDrawerLayout.openDrawer(GravityCompat.START);
+            mainLayout.mainDrawer.openDrawer(GravityCompat.START);
             return true;
         } else if (id == R.id.action_delete_project) {
             projectService.deleteProject(currentProject);
@@ -96,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
             fillTabWithNewData(projects.get(order - 1));
             return true;
         } else if (id == R.id.action_edit_project) {
-            new ProjectEditableFragment(projectNavigationView.getMenu(), projectService, projects, getApplicationContext(), currentProject, getSupportActionBar()).show(getSupportFragmentManager(), "Update Project");
+            ProjectEditableFragment projectEditableFragment = new ProjectEditableFragment(projectNavigationView.getMenu(), projectService, projects, getApplicationContext(), currentProject, getSupportActionBar(), null);
+            projectEditableFragment.show(getSupportFragmentManager(), "Update Project");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -122,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        toolbar = mainActivityLayout.taskListLayout.taskListToolbar;
+        toolbar = mainLayout.mainLayoutBody.taskListToolbar;
         setSupportActionBar(toolbar);
-        toolbar.getOverflowIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        toolbar.getOverflowIcon().setColorFilter(new BlendModeColorFilter(Color.WHITE, BlendMode.SRC_IN));
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu_white);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -133,23 +136,23 @@ public class MainActivity extends AppCompatActivity {
     private void initDrawer() {
         Menu projectMenu = projectNavigationView.getMenu();
         MenuItem inboxMenuItem = projectMenu.findItem(R.id.inbox_item);
-        inboxMenuItem.setActionView(R.layout.project_menu_item);
+        inboxMenuItem.setActionView(R.layout.add_project_button_layout);
         projectNavigationView.setItemIconTintList(null);
         initProjects();
         Button button = inboxMenuItem.getActionView().findViewById(R.id.button_add);
         button.setOnClickListener(v ->
-                new ProjectEditableFragment(projectMenu, projectService, projects, getApplicationContext(), null, null)
+                new ProjectEditableFragment(projectMenu, projectService, projects, getApplicationContext(), null, null, this::fillTabWithNewData)
                 .show(getSupportFragmentManager(), "New project fragment"));
         projectNavigationView.setNavigationItemSelectedListener(item -> {
             fillTabWithNewData(item);
-            mainActivityLayout.mainDrawerLayout.closeDrawer(GravityCompat.START);
+            mainLayout.mainDrawer.closeDrawer(GravityCompat.START);
             return true;
         });
         initMenu();
     }
 
     private void initMenu() {
-        taskRecyclerView = mainActivityLayout.taskListLayout.taskListContentLayout.listView;
+        taskRecyclerView = mainLayout.mainLayoutBody.taskListLayout.listView;
         taskRecyclerView.setHasFixedSize(true);
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         TaskListAdapter adapter = new TaskListAdapter(taskService);
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
     private void fillTabWithNewData(ProjectEntity projectEntity) {
         TaskListAdapter adapter = (TaskListAdapter) taskRecyclerView.getAdapter();
         adapter.setCurrentProject(projectEntity);
+        adapter.setProjectEntities(projects);
         getSupportActionBar().setTitle(projectEntity.getTitle());
         currentProject = projectEntity;
         invalidateOptionsMenu();
@@ -183,7 +187,9 @@ public class MainActivity extends AppCompatActivity {
     private ProjectEntity initInbox() {
         ProjectEntity inbox = new ProjectEntity();
         inbox.setTitle(getString(R.string.inbox));
-        return projectService.saveProject(inbox);
+        ProjectEntity inboxProject = projectService.saveProject(inbox);
+        projects.add(inbox);
+        return inboxProject;
     }
 
     private void initProjects() {
