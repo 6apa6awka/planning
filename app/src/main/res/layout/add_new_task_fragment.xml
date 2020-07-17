@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Input task..."
+        android:inputType="textCapSentences"
+        android:hint="@string/task_title"
         android:text="" />
 </LinearLayout>

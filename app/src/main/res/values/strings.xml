@@ -8,5 +8,6 @@
     <string name="projects">Projects</string>
     <string name="action_delete_project">Delete</string>
     <string name="action_edit_project">Edit</string>
-    <string name="input_project">Input project...</string>
+    <string name="project_title">Project title…</string>
+    <string name="task_title">Task title…</string>
 </resources>
