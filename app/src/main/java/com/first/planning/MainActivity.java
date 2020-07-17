@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import com.first.planning.component.project.MoveToProjectOnClickListener;
 import com.first.planning.component.project.ProjectEditableFragment;
 import com.first.planning.component.task.NewTaskDialogFragment;
 import com.first.planning.component.task.TaskListAdapter;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
     //Db services
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             fillTabWithNewData(projects.get(order - 1));
             return true;
         } else if (id == R.id.action_edit_project) {
-            ProjectEditableFragment projectEditableFragment = new ProjectEditableFragment(projectNavigationView.getMenu(), projectService, projects, getApplicationContext(), currentProject, getSupportActionBar(), null);
+            ProjectEditableFragment projectEditableFragment = new ProjectEditableFragment(projectNavigationView.getMenu(), projectService, projects, getApplicationContext(), currentProject, null);
             projectEditableFragment.show(getSupportFragmentManager(), "Update Project");
             return true;
         }
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         initProjects();
         Button button = inboxMenuItem.getActionView().findViewById(R.id.button_add);
         button.setOnClickListener(v ->
-                new ProjectEditableFragment(projectMenu, projectService, projects, getApplicationContext(), null, null, this::fillTabWithNewData)
+                new ProjectEditableFragment(projectMenu, projectService, projects, getApplicationContext(), null, this::fillTabWithNewData)
                 .show(getSupportFragmentManager(), "New project fragment"));
         projectNavigationView.setNavigationItemSelectedListener(item -> {
             fillTabWithNewData(item);
@@ -168,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillTabWithNewData(ProjectEntity projectEntity) {
+        currentProject = projectEntity;
         TaskListAdapter adapter = (TaskListAdapter) taskRecyclerView.getAdapter();
         adapter.setCurrentProject(projectEntity);
-        adapter.setProjectEntities(projects);
+        adapter.setMoveToProjectListener(getMoveToProjectListener());
         getSupportActionBar().setTitle(projectEntity.getTitle());
-        currentProject = projectEntity;
         invalidateOptionsMenu();
     }
 
@@ -219,5 +221,11 @@ public class MainActivity extends AppCompatActivity {
             return new Properties();
         }
 
+    }
+
+    private MoveToProjectOnClickListener getMoveToProjectListener() {
+        return new MoveToProjectOnClickListener(projects.stream()
+                .filter(pe -> pe.getId() != currentProject.getId())
+                .collect(Collectors.toList()));
     }
 }

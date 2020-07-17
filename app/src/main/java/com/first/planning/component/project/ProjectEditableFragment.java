@@ -33,20 +33,18 @@ public class ProjectEditableFragment extends DialogFragment {
     private List<ProjectEntity> projects;
     private Context context;
     private ProjectEntity currentProject;
-    private ActionBar actionBar;
     private Consumer<ProjectEntity> callback;
 
     int[] colors;
 
     public static final String COLOR = "color";
 
-    public ProjectEditableFragment(Menu projectMenu, ProjectService projectService, List<ProjectEntity> projects, Context context, ProjectEntity currentProject, ActionBar actionBar, Consumer<ProjectEntity> callback) {
+    public ProjectEditableFragment(Menu projectMenu, ProjectService projectService, List<ProjectEntity> projects, Context context, ProjectEntity currentProject, Consumer<ProjectEntity> callback) {
         this.projectMenu = projectMenu;
         this.projectService = projectService;
         this.context = context;
         this.projects = projects;
         this.currentProject = currentProject;
-        this.actionBar = actionBar;
         this.callback = callback;
 
         colors = context.getResources().getIntArray(R.array.projectColorArray);
@@ -87,7 +85,6 @@ public class ProjectEditableFragment extends DialogFragment {
                 updateAndSave(currentProject, color, titleEditText.getText().toString());
                 item = projectMenu.findItem(currentProject.getId());
                 item.setTitle(currentProject.getTitle());
-                actionBar.setTitle(currentProject.getTitle());
             }
             Drawable drawable = ContextCompat.getDrawable(context, R.drawable.circle_icon);
             item.setIcon(drawable);
