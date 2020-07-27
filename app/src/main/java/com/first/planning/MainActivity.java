@@ -4,13 +4,11 @@ import android.content.res.ColorStateList;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import com.first.planning.component.project.MoveToProjectOnClickListener;
 import com.first.planning.component.project.ProjectEditableFragment;
-import com.first.planning.component.task.NewTaskDialogFragment;
+import com.first.planning.component.task.TaskEditableFragment;
 import com.first.planning.component.task.TaskListAdapter;
 import com.first.planning.component.task.TaskListTouchHelperCallback;
 import com.first.planning.databinding.MainLayoutBinding;
@@ -40,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
     //Db services
@@ -107,6 +104,19 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void fillTabWithNewData(MenuItem item) {
+        ProjectEntity project = item.getGroupId() == R.id.categories ? projects.get(item.getOrder()) : inboxProject;
+        fillTabWithNewData(project);
+    }
+
+    private void fillTabWithNewData(ProjectEntity projectEntity) {
+        currentProject = projectEntity;
+        TaskListAdapter adapter = (TaskListAdapter) taskRecyclerView.getAdapter();
+        adapter.setCurrentProject(projectEntity);
+        getSupportActionBar().setTitle(projectEntity.getTitle());
+        invalidateOptionsMenu();
+    }
+
     private void initData() {
         RoomDataService dataService = DataServiceResolver.resolve(loadAppProperties(), getApplicationContext());
         projectService = dataService.getProjectService();
@@ -118,6 +128,20 @@ public class MainActivity extends AppCompatActivity {
                 .findFirst().orElseGet(this::initInbox);
 
         currentProject = inboxProject;
+    }
+
+    private Properties loadAppProperties() {
+        try {
+            InputStream ip = getAssets().open("app.properties");
+            Properties properties = new Properties();
+            properties.load(ip);
+            ip.close();
+            return properties;
+        } catch (IOException e) {
+            Log.e("CREATION", "onCreate: can't load appProperties file. Default values will be used", e);
+            return new Properties();
+        }
+
     }
 
     private void initComponents() {
@@ -144,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         Button button = inboxMenuItem.getActionView().findViewById(R.id.button_add);
         button.setOnClickListener(v ->
                 new ProjectEditableFragment(projectMenu, projectService, projects, getApplicationContext(), null, this::fillTabWithNewData)
-                .show(getSupportFragmentManager(), "New project fragment"));
+                        .show(getSupportFragmentManager(), "New project fragment"));
         projectNavigationView.setNavigationItemSelectedListener(item -> {
             fillTabWithNewData(item);
             mainLayout.mainDrawer.closeDrawer(GravityCompat.START);
@@ -157,30 +181,17 @@ public class MainActivity extends AppCompatActivity {
         taskRecyclerView = mainLayout.mainLayoutBody.taskListLayout.listView;
         taskRecyclerView.setHasFixedSize(true);
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        TaskListAdapter adapter = new TaskListAdapter(taskService);
+        TaskListAdapter adapter = new TaskListAdapter(taskService, this);
+        adapter.setProjects(projects);
         taskRecyclerView.setAdapter(adapter);
         TaskListTouchHelperCallback taskListTouchHelperCallback = new TaskListTouchHelperCallback(adapter);
         new ItemTouchHelper(taskListTouchHelperCallback).attachToRecyclerView(taskRecyclerView);
         taskRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
     }
 
-    private void fillTabWithNewData(MenuItem item) {
-        ProjectEntity project = item.getGroupId() == R.id.categories ? projects.get(item.getOrder()) : inboxProject;
-        fillTabWithNewData(project);
-    }
-
-    private void fillTabWithNewData(ProjectEntity projectEntity) {
-        currentProject = projectEntity;
-        TaskListAdapter adapter = (TaskListAdapter) taskRecyclerView.getAdapter();
-        adapter.setCurrentProject(projectEntity);
-        adapter.setMoveToProjectListener(getMoveToProjectListener());
-        getSupportActionBar().setTitle(projectEntity.getTitle());
-        invalidateOptionsMenu();
-    }
-
     private void initAddNewTaskButton() {
         FloatingActionButton newTaskButton = findViewById(R.id.addTaskButton);
-        NewTaskDialogFragment fragment = new NewTaskDialogFragment((TaskListAdapter) taskRecyclerView.getAdapter());
+        TaskEditableFragment fragment = new TaskEditableFragment((TaskListAdapter) taskRecyclerView.getAdapter());
         newTaskButton.setOnClickListener(view -> {
             fragment.show(getSupportFragmentManager(), "testDialog");
         });
@@ -207,25 +218,5 @@ public class MainActivity extends AppCompatActivity {
                 item.setIconTintList(ColorStateList.valueOf(project.getColor()));
             }
         }
-    }
-
-    private Properties loadAppProperties() {
-        try {
-            InputStream ip = getAssets().open("app.properties");
-            Properties properties = new Properties();
-            properties.load(ip);
-            ip.close();
-            return properties;
-        } catch (IOException e) {
-            Log.e("CREATION", "onCreate: can't load appProperties file. Default values will be used", e);
-            return new Properties();
-        }
-
-    }
-
-    private MoveToProjectOnClickListener getMoveToProjectListener() {
-        return new MoveToProjectOnClickListener(projects.stream()
-                .filter(pe -> pe.getId() != currentProject.getId())
-                .collect(Collectors.toList()));
     }
 }

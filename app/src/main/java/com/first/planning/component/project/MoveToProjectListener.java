@@ -17,14 +17,10 @@ import com.first.planning.persistent.room.entity.TaskEntity;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class MoveToProjectOnClickListener implements View.OnClickListener {
+public class MoveToProjectListener implements View.OnClickListener {
     private List<ProjectEntity> projectEntities;
     private TaskEntity currentTask;
     private Consumer<TaskEntity> callback;
-
-    public MoveToProjectOnClickListener(List<ProjectEntity> projectEntities) {
-        this.projectEntities = projectEntities;
-    }
 
     @Override
     public void onClick(View v) {
@@ -53,6 +49,10 @@ public class MoveToProjectOnClickListener implements View.OnClickListener {
         });
         popup.getMenuInflater().inflate(R.menu.project_menu, popupMenu);
         popup.show();
+    }
+
+    public void setProjectEntities(List<ProjectEntity> projectEntities) {
+        this.projectEntities = projectEntities;
     }
 
     public void setCurrentTask(TaskEntity currentTask) {
