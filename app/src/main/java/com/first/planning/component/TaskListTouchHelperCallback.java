@@ -1,4 +1,4 @@
-package com.first.planning.component.task;
+package com.first.planning.component;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;

@@ -1,6 +1,5 @@
-package com.first.planning.component.task;
+package com.first.planning.component;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
@@ -26,12 +25,18 @@ public class TaskEditableFragment extends DialogFragment {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         View newTaskView = requireActivity().getLayoutInflater().inflate(R.layout.add_new_task_fragment, null);
         builder.setView(newTaskView);
-        if (!isNew()) {
-            ((EditText) newTaskView.findViewById(R.id.editText)).setText(task.getTitle());
+        EditText editText = newTaskView.findViewById(R.id.editText);
+
+        int positiveButtonLabel;
+        if (isNew()) {
+            positiveButtonLabel = R.string.create;
+        } else {
+            editText.setText(task.getTitle());
+            positiveButtonLabel = R.string.update;
         }
-        int positiveButtonLabel = isNew() ? R.string.create : R.string.update;
+
         builder.setPositiveButton(positiveButtonLabel, (dialog, id) -> {
-            String taskName = ((EditText) newTaskView.findViewById(R.id.editText)).getText().toString();
+            String taskName = editText.getText().toString();
             if (isNew()) {
                 taskListAdapter.add(taskName);
             } else {
@@ -43,7 +48,6 @@ public class TaskEditableFragment extends DialogFragment {
         builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
             this.dismiss();
         });
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 

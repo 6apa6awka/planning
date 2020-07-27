@@ -1,4 +1,4 @@
-package com.first.planning.component.project;
+package com.first.planning.component;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;

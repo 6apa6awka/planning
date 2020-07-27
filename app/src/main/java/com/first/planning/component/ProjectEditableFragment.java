@@ -1,6 +1,5 @@
-package com.first.planning.component.project;
+package com.first.planning.component;
 
-import androidx.appcompat.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;

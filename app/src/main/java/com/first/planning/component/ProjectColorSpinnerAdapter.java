@@ -1,8 +1,7 @@
-package com.first.planning.component.project;
+package com.first.planning.component;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.first.planning.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.first.planning.component.project.ProjectEditableFragment.COLOR;
+import static com.first.planning.component.ProjectEditableFragment.COLOR;
 
 public class ProjectColorSpinnerAdapter extends SimpleAdapter {
     private Context context;

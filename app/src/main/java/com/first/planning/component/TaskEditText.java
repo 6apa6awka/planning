@@ -1,11 +1,8 @@
-package com.first.planning.component.task;
+package com.first.planning.component;
 
 import android.content.Context;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -23,35 +23,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/taskStatus"
-        android:layout_width="97dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="5dp"
-        android:text="TaskStatus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskText" />
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonMoveTo"
         style="@style/Widget.App.Button.TextButton.IconOnly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        app:icon="@drawable/ic_baseline_move_to_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:backgroundTint="@color/more_darker_white"
+        app:icon="@drawable/ic_move_to_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskText"
+        app:strokeColor="@android:color/darker_gray"
+        app:strokeWidth="1dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/editTitle"
         style="@style/Widget.App.Button.TextButton.IconOnly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/more_darker_white"
         app:icon="@drawable/ic_outline_edit_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMoveTo" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonMoveTo"
+        app:layout_constraintTop_toBottomOf="@+id/taskText"
+        app:strokeColor="@android:color/darker_gray"
+        app:strokeWidth="1dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

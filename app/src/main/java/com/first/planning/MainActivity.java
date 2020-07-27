@@ -7,10 +7,10 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import com.first.planning.component.project.ProjectEditableFragment;
-import com.first.planning.component.task.TaskEditableFragment;
-import com.first.planning.component.task.TaskListAdapter;
-import com.first.planning.component.task.TaskListTouchHelperCallback;
+import com.first.planning.component.ProjectEditableFragment;
+import com.first.planning.component.TaskEditableFragment;
+import com.first.planning.component.TaskListAdapter;
+import com.first.planning.component.TaskListTouchHelperCallback;
 import com.first.planning.databinding.MainLayoutBinding;
 import com.first.planning.persistent.common.service.DataServiceResolver;
 import com.first.planning.persistent.common.service.impl.RoomDataService;

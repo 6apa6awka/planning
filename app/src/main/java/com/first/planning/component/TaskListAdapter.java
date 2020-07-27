@@ -1,11 +1,10 @@
-package com.first.planning.component.task;
+package com.first.planning.component;
 
 import android.app.Activity;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.first.planning.R;
-import com.first.planning.component.project.MoveToProjectListener;
 import com.first.planning.persistent.room.entity.ProjectEntity;
 import com.first.planning.persistent.room.entity.TaskEntity;
 import com.first.planning.persistent.room.service.TaskService;
