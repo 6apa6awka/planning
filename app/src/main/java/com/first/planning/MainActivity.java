@@ -82,8 +82,10 @@ public class MainActivity extends DataActivity {
         } else if (id == R.id.action_delete_project) {
             projectService.deleteProject(currentProject);
             int order = projectNavigationView.getMenu().findItem(currentProject.getId()).getOrder();
-            projectNavigationView.getMenu().removeItem(currentProject.getId());
+            //projectNavigationView.getMenu().removeItem(currentProject.getId());
+            cleanProjectMenu();
             projects.remove(order);
+            initProjects();
             fillTabWithNewData(projects.get(order - 1));
             return true;
         } else if (id == R.id.action_edit_project) {
@@ -158,6 +160,18 @@ public class MainActivity extends DataActivity {
         newTaskButton.setOnClickListener(view -> {
             fragment.show(getSupportFragmentManager(), "testDialog");
         });
+    }
+
+    private void cleanProjectMenu() {
+        Menu projectMenu = projectNavigationView.getMenu();
+        for (int i = 0; i < projects.size(); i++) {
+            ProjectEntity project = projects.get(i);
+            String title = project.getTitle();
+            int id = project.getId();
+            if (!getString(R.string.inbox).equals(title) && projectMenu.findItem(id) != null) {
+                projectMenu.removeItem(id);
+            }
+        }
     }
 
     private void initProjects() {
