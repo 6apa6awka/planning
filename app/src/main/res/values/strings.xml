@@ -10,4 +10,5 @@
     <string name="action_edit_project">Edit</string>
     <string name="project_title">Project title…</string>
     <string name="task_title">Task title…</string>
+    <string name="add_task">Add task</string>
 </resources>

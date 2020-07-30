@@ -25,10 +25,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListViewHolder> {
     private int collapsedPrevPosition = -1;
 
     public TaskListAdapter(TaskService taskService, Activity context) {
-        //((Application)context).
         this.taskService = taskService;
-        data = new ArrayList<>();
         this.context = context;
+        data = new ArrayList<>();
     }
 
     public void add(String taskName) {

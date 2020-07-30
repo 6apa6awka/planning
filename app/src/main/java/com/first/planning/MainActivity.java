@@ -12,15 +12,12 @@ import com.first.planning.component.TaskEditableFragment;
 import com.first.planning.component.TaskListAdapter;
 import com.first.planning.component.TaskListTouchHelperCallback;
 import com.first.planning.databinding.MainLayoutBinding;
-import com.first.planning.persistent.common.service.DataServiceResolver;
-import com.first.planning.persistent.common.service.impl.RoomDataService;
 import com.first.planning.persistent.room.entity.ProjectEntity;
-import com.first.planning.persistent.room.service.ProjectService;
-import com.first.planning.persistent.room.service.TaskService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.internal.NavigationMenu;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -29,20 +26,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
-public class MainActivity extends AppCompatActivity {
-    //Db services
-    private TaskService taskService;
-    private ProjectService projectService;
+public class MainActivity extends DataActivity {
 
     //Components
     private MainLayoutBinding mainLayout;
@@ -51,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     //Entities
-    private List<ProjectEntity> projects;
-    private ProjectEntity inboxProject;
     private ProjectEntity currentProject;
 
     @Override
@@ -62,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
         projectNavigationView = mainLayout.mainNavigationView;
         setContentView(mainLayout.getRoot());
 
+        currentProject = inboxProject;
+
         //initialization
-        initData();
         initComponents();
         fillTabWithNewData(inboxProject);
     }
@@ -117,33 +107,6 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    private void initData() {
-        RoomDataService dataService = DataServiceResolver.resolve(loadAppProperties(), getApplicationContext());
-        projectService = dataService.getProjectService();
-        taskService = dataService.getTaskService();
-
-        projects = projectService.getProjects();
-        inboxProject = projects.stream()
-                .filter(project -> getString(R.string.inbox).equals(project.getTitle()))
-                .findFirst().orElseGet(this::initInbox);
-
-        currentProject = inboxProject;
-    }
-
-    private Properties loadAppProperties() {
-        try {
-            InputStream ip = getAssets().open("app.properties");
-            Properties properties = new Properties();
-            properties.load(ip);
-            ip.close();
-            return properties;
-        } catch (IOException e) {
-            Log.e("CREATION", "onCreate: can't load appProperties file. Default values will be used", e);
-            return new Properties();
-        }
-
-    }
-
     private void initComponents() {
         initToolbar();
         initDrawer();
@@ -195,14 +158,6 @@ public class MainActivity extends AppCompatActivity {
         newTaskButton.setOnClickListener(view -> {
             fragment.show(getSupportFragmentManager(), "testDialog");
         });
-    }
-
-    private ProjectEntity initInbox() {
-        ProjectEntity inbox = new ProjectEntity();
-        inbox.setTitle(getString(R.string.inbox));
-        ProjectEntity inboxProject = projectService.saveProject(inbox);
-        projects.add(inbox);
-        return inboxProject;
     }
 
     private void initProjects() {
