@@ -6,16 +6,18 @@
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:ems="12"
-        android:inputType="textCapWords"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:inputType="textCapSentences"
+        android:layout_weight="1"
         style="@style/Widget.MaterialComponents.TextView"
         android:hint="@string/project_title"
         android:text="" />
 
     <Spinner
         android:id="@+id/project_color_spinner"
-        style="@style/Widget.AppCompat.Spinner.DropDown"
+        style="@style/Widget.AppCompat.DropDownItem.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 </LinearLayout>
